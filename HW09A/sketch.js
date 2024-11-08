@@ -17,7 +17,7 @@ function setup() {
 
   // we'll read pixel color info from the oImg, so let's load its pixels
   oImg.loadPixels();
-
+  mImg.loadPixels();
   // TODO: setup sliders and other DOM/html elements here
 }
 
@@ -29,9 +29,49 @@ function draw() {
   //       This involves a for loop of some kind.
   //       Remember to read from the oImg pixels and write to the mImg.
 
-  // we'll display the updated mImg, so let's update its pixels
+  for (let idx = 0; idx < oImg.pixels.length; idx += 4) {
+    let redVal = oImg.pixels[idx + 0];
+    let greenVal = oImg.pixels[idx + 1];
+    let blueVal = oImg.pixels[idx + 2];
+    let alphaVal = oImg.pixels[idx + 3];
+
+    let pixelIsRed = redVal > 2 * greenVal && redVal > 2 * blueVal && redVal > 1;
+    let pixelIsBlue = blueVal > 2 * redVal && blueVal > 1 * greenVal && blueVal > 1;
+    let pixelisYellow = redVal > 1 * greenVal && redVal > 2 * blueVal && redVal > 200;
+
+    
+    //FOR RED SECTIONS
+    if (pixelIsRed) {
+      mImg.pixels[idx + 0] = 0;   // Red channel (set to 0)
+      mImg.pixels[idx + 1] = 0;   // Green channel (set to 0)
+      mImg.pixels[idx + 2] = 255; // Blue channel (set to 255)
+      mImg.pixels[idx + 3] = alphaVal;  // Keep original alpha
+    }
+    //FOR BLUE SECTIONS
+    else if (pixelIsBlue) {
+      mImg.pixels[idx + 0] = 0;
+      mImg.pixels[idx + 1] = 255;
+      mImg.pixels[idx + 2] = 0;
+      mImg.pixels[idx + 3] = alphaVal;
+    }
+    //FOR YELLOW SECTIONS
+    else if (pixelisYellow) {
+      mImg.pixels[idx + 0] = 0; 
+      mImg.pixels[idx + 1] = 0;
+      mImg.pixels[idx + 2] = 100;
+      mImg.pixels[idx + 3] = alphaVal;
+    }
+    // for all other pixels: keep original colors
+    else {
+      mImg.pixels[idx + 0] = redVal;
+      mImg.pixels[idx + 1] = greenVal;
+      mImg.pixels[idx + 2] = blueVal;
+      mImg.pixels[idx + 3] = alphaVal;
+    }
+  }
+
   mImg.updatePixels();
 
-  // draw the display image
+  image(oImg, 0, 0);
   image(mImg, 0, 0);
 }
