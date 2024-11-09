@@ -5,14 +5,9 @@ let oImg;
 // display image, to modify and display on canvas
 let mImg;
 
-let rSlider;
-let gSlider;
-let bSlider;
-
 function preload() {
   oImg = loadImage("../assets/mondriaan.jpg");
   mImg = loadImage("../assets/mondriaan.jpg");
-  bgImg = loadImage("../09A_frames_F_1.png")
 }
 
 function setup() {
@@ -24,14 +19,6 @@ function setup() {
   oImg.loadPixels();
   mImg.loadPixels();
   // TODO: setup sliders and other DOM/html elements here
- rSlider = createSlider(0, 255, 128);
- rSlider.position(130, 140);
-
- gSlider = createSlider(0, 255, 128);
- gSlider.position(130, 160);
-
- bSlider = createSlider(0, 255, 128);
- bSlider.position(130, 180);
 }
 
 function draw() {
@@ -41,19 +28,6 @@ function draw() {
   // TODO: do any filtering and pixel modifications here.
   //       This involves a for loop of some kind.
   //       Remember to read from the oImg pixels and write to the mImg.
-  let rAmount = rSlider.value();
-  let gAmount = gSlider.value();
-  let bAmount = bSlider.value();
-
-  rSlider.style('width', '150px');
-  rSlider.style('height', '3px');
-
-  gSlider.style('width', '150px');
-  gSlider.style('height', '3px');
-
-  bSlider.style('width', '150px');
-  bSlider.style('height', '3px');
-
 
   for (let idx = 0; idx < oImg.pixels.length; idx += 4) {
     let redVal = oImg.pixels[idx + 0];
@@ -68,10 +42,10 @@ function draw() {
     
     //FOR RED SECTIONS
     if (pixelIsRed) {
-      mImg.pixels[idx + 0] = rAmount;
-      mImg.pixels[idx + 1] = gAmount;
-      mImg.pixels[idx + 2] = bAmount;
-      mImg.pixels[idx + 3] = alphaVal;
+      mImg.pixels[idx + 0] = 0;   // Red channel (set to 0)
+      mImg.pixels[idx + 1] = 0;   // Green channel (set to 0)
+      mImg.pixels[idx + 2] = 255; // Blue channel (set to 255)
+      mImg.pixels[idx + 3] = alphaVal;  // Keep original alpha
     }
     //FOR BLUE SECTIONS
     else if (pixelIsBlue) {
@@ -84,8 +58,8 @@ function draw() {
     else if (pixelisYellow) {
       mImg.pixels[idx + 0] = 0; 
       mImg.pixels[idx + 1] = 0;
-      mImg.pixels[idx + 2] = 0;
-      mImg.pixels[idx + 3] = 0;
+      mImg.pixels[idx + 2] = 100;
+      mImg.pixels[idx + 3] = alphaVal;
     }
     // for all other pixels: keep original colors
     else {
@@ -100,10 +74,4 @@ function draw() {
 
   image(oImg, 0, 0);
   image(mImg, 0, 0);
-
-  fill(255);
-  textSize(14);
-  text("Red Amount: " + rAmount, 290, 148);
-  text("Green Amount: " + gAmount, 290, 168);
-  text("Blue Amount: " + bAmount, 290, 188);
 }
