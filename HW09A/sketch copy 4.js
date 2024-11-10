@@ -5,8 +5,6 @@ let oImg;
 // display image, to modify and display on canvas
 let mImg;
 
-let mGif;
-
 let rSlider;
 let gSlider;
 let bSlider;
@@ -14,20 +12,16 @@ let bSlider;
 function preload() {
   oImg = loadImage("../assets/mondriaan.jpg");
   mImg = loadImage("../assets/mondriaan.jpg");
-  mGif = loadImage("./09A_frames/F_1.png");
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   oImg.resize(0, height);
   mImg.resize(0, height);
-  mGif.resize(0, 330);
 
   // we'll read pixel color info from the oImg, so let's load its pixels
   oImg.loadPixels();
   mImg.loadPixels();
-  mGif.loadPixels();
-
   // TODO: setup sliders and other DOM/html elements here
  rSlider = createSlider(0, 255, 128);
  rSlider.position(130, 140);
@@ -104,10 +98,7 @@ function draw() {
   mImg.updatePixels();
 
   image(oImg, 0, 0);
-  image(mGif, 300, 0)
-  image(mGif, 0, 500)
   image(mImg, 0, 0);
- 
 
   fill(255);
   textSize(14);
