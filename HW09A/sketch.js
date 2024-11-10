@@ -27,6 +27,9 @@ function setup() {
   oImg.resize(0, height);
   mImg.resize(0, height);
 
+  colorPicker = createColorPicker('#003f7c');
+  colorPicker.position(200, 212);
+
   // Resize images in mGif array
   for (let i = 0; i < mGif.length; i++) {
     mGif[i].resize(0, 330);
@@ -37,13 +40,13 @@ function setup() {
   mImg.loadPixels();
 
   // Setup sliders
-  rSlider = createSlider(0, 255, 128);
+  rSlider = createSlider(0, 255, 253);
   rSlider.position(100, 140);
 
-  gSlider = createSlider(0, 255, 128);
+  gSlider = createSlider(0, 255, 67);
   gSlider.position(100, 160);
 
-  bSlider = createSlider(0, 255, 128);
+  bSlider = createSlider(0, 255, 42);
   bSlider.position(100, 180);
 
   GifSlider = createSlider(0, 45, 0);
@@ -66,6 +69,11 @@ function setup() {
 function draw() {
   // Modify mImg pixels
   mImg.loadPixels();
+
+  let pickedColor = colorPicker.color();  // get the picked color
+  let pickedR = red(pickedColor);         // extract red component
+  let pickedG = green(pickedColor);       // extract green component
+  let pickedB = blue(pickedColor);
 
   // Get slider values
   let rAmount = rSlider.value();
@@ -92,9 +100,9 @@ function draw() {
       mImg.pixels[idx + 3] = alphaVal;
     }
     else if (pixelIsBlue) {
-      mImg.pixels[idx + 0] = 0;
-      mImg.pixels[idx + 1] = 255;
-      mImg.pixels[idx + 2] = 0;
+      mImg.pixels[idx + 0] = pickedR;
+      mImg.pixels[idx + 1] = pickedG;
+      mImg.pixels[idx + 2] = pickedB;
       mImg.pixels[idx + 3] = alphaVal;
     }
     else if (pixelIsYellow) {
@@ -114,8 +122,11 @@ function draw() {
 
   // Display images
   image(oImg, 0, 0);
+  push();
+  blendMode(HARD_LIGHT);
   image(mGif[GifFrame], 0, 500);
-  image(mGif[GifFrame], 300, 0); 
+  image(mGif[GifFrame], 325, 0); 
+  pop();
   image(mImg, 0, 0);
 
   // Display slider values
@@ -124,5 +135,7 @@ function draw() {
   text("Red Amount: " + rAmount, 260, 148);
   text("Green Amount: " + gAmount, 260, 168);
   text("Blue Amount: " + bAmount, 260, 188);
+  text("Color Picker", 260, 220);
+  text(pickedColor, 260, 237);
   text("Animation Frame: " + GifFrame, 260, 278);
 }
