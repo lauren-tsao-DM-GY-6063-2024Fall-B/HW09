@@ -1,55 +1,55 @@
-
-// original image, to use as reference for pixel colors
+// Original image, to use as reference for pixel colors
 let oImg;
 
-// display image, to modify and display on canvas
+// Display image, to modify and display on canvas
 let mImg;
 
-let mGif;
+let mGif = [];
 
 let rSlider;
 let gSlider;
 let bSlider;
+let GifSlider;
+
+let colorPicker;
 
 function preload() {
   oImg = loadImage("../assets/mondriaan.jpg");
   mImg = loadImage("../assets/mondriaan.jpg");
-  mGif = loadImage("./09A_frames/F_1.png");
+  
+  for (let i = 0; i <= 47; i++) {
+    mGif.push(loadImage(`./09A_frames/F_${i}.png`));
+  }
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   oImg.resize(0, height);
   mImg.resize(0, height);
-  mGif.resize(0, 330);
 
-  // we'll read pixel color info from the oImg, so let's load its pixels
+  // Resize images in mGif array
+  for (let i = 0; i < mGif.length; i++) {
+    mGif[i].resize(0, 330);
+  }
+
+  // Load pixels after resizing images
   oImg.loadPixels();
   mImg.loadPixels();
-  mGif.loadPixels();
 
-  // TODO: setup sliders and other DOM/html elements here
- rSlider = createSlider(0, 255, 128);
- rSlider.position(130, 140);
+  // Setup sliders
+  rSlider = createSlider(0, 255, 128);
+  rSlider.position(100, 140);
 
- gSlider = createSlider(0, 255, 128);
- gSlider.position(130, 160);
+  gSlider = createSlider(0, 255, 128);
+  gSlider.position(100, 160);
 
- bSlider = createSlider(0, 255, 128);
- bSlider.position(130, 180);
-}
+  bSlider = createSlider(0, 255, 128);
+  bSlider.position(100, 180);
 
-function draw() {
-  // we'll modify and display the mImg object, so let's load its pixels
-  mImg.loadPixels();
+  GifSlider = createSlider(0, 45, 0);
+  GifSlider.position(100, 270);
 
-  // TODO: do any filtering and pixel modifications here.
-  //       This involves a for loop of some kind.
-  //       Remember to read from the oImg pixels and write to the mImg.
-  let rAmount = rSlider.value();
-  let gAmount = gSlider.value();
-  let bAmount = bSlider.value();
-
+  // Set slider styles once in setup
   rSlider.style('width', '150px');
   rSlider.style('height', '3px');
 
@@ -59,7 +59,21 @@ function draw() {
   bSlider.style('width', '150px');
   bSlider.style('height', '3px');
 
+  GifSlider.style('width', '150px');
+  GifSlider.style('height', '2px');
+}
 
+function draw() {
+  // Modify mImg pixels
+  mImg.loadPixels();
+
+  // Get slider values
+  let rAmount = rSlider.value();
+  let gAmount = gSlider.value();
+  let bAmount = bSlider.value();
+  let GifFrame = GifSlider.value();
+
+  // Iterate through pixels of oImg and modify mImg
   for (let idx = 0; idx < oImg.pixels.length; idx += 4) {
     let redVal = oImg.pixels[idx + 0];
     let greenVal = oImg.pixels[idx + 1];
@@ -68,32 +82,27 @@ function draw() {
 
     let pixelIsRed = redVal > 2 * greenVal && redVal > 2 * blueVal && redVal > 200;
     let pixelIsBlue = blueVal > 2 * redVal && blueVal > 1 * greenVal && blueVal > 1;
-    let pixelisYellow = redVal > 1 * greenVal && redVal > 2 * blueVal && redVal > 200;
+    let pixelIsYellow = redVal > 1 * greenVal && redVal > 2 * blueVal && redVal > 200;
 
-    
-    //FOR RED SECTIONS
+    // Modify pixel colors based on conditions
     if (pixelIsRed) {
       mImg.pixels[idx + 0] = rAmount;
       mImg.pixels[idx + 1] = gAmount;
       mImg.pixels[idx + 2] = bAmount;
       mImg.pixels[idx + 3] = alphaVal;
     }
-    //FOR BLUE SECTIONS
     else if (pixelIsBlue) {
       mImg.pixels[idx + 0] = 0;
       mImg.pixels[idx + 1] = 255;
       mImg.pixels[idx + 2] = 0;
       mImg.pixels[idx + 3] = alphaVal;
     }
-    //FOR YELLOW SECTIONS
-    else if (pixelisYellow) {
-      mImg.pixels[idx + 0] = 0; 
+    else if (pixelIsYellow) {
+      mImg.pixels[idx + 0] = 0;
       mImg.pixels[idx + 1] = 0;
       mImg.pixels[idx + 2] = 0;
       mImg.pixels[idx + 3] = 0;
-    }
-    // for all other pixels: keep original colors
-    else {
+    } else {
       mImg.pixels[idx + 0] = redVal;
       mImg.pixels[idx + 1] = greenVal;
       mImg.pixels[idx + 2] = blueVal;
@@ -103,15 +112,17 @@ function draw() {
 
   mImg.updatePixels();
 
+  // Display images
   image(oImg, 0, 0);
-  image(mGif, 300, 0)
-  image(mGif, 0, 500)
+  image(mGif[GifFrame], 0, 500);
+  image(mGif[GifFrame], 300, 0); 
   image(mImg, 0, 0);
- 
 
+  // Display slider values
   fill(255);
   textSize(14);
-  text("Red Amount: " + rAmount, 290, 148);
-  text("Green Amount: " + gAmount, 290, 168);
-  text("Blue Amount: " + bAmount, 290, 188);
+  text("Red Amount: " + rAmount, 260, 148);
+  text("Green Amount: " + gAmount, 260, 168);
+  text("Blue Amount: " + bAmount, 260, 188);
+  text("Animation Frame: " + GifFrame, 260, 278);
 }
