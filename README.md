@@ -11,5 +11,6 @@
 #### HW09B
 - Make a pinching gesture between the thumb and index finger for either or both your hands.
 - Open up your fingers, a square or circle of a randomized color and blend mode will form.
-- To randomize the shapes, move your hands out of the frame and back, followed by repeating the gesture again.
-- Demo can be found [here](https://drive.google.com/file/d/1g1bWzyEPrzzbnQOxlNhNeb0TrSW2aINS/view?usp=sharing), have fun!
+- To generate new shapes, move your hands completely out of the frame and back in, and repeat the pinching gesture again.
+- Demo can be found [here](https://drive.google.com/file/d/1g1bWzyEPrzzbnQOxlNhNeb0TrSW2aINS/view?usp=sharing)
+- Have fun!
