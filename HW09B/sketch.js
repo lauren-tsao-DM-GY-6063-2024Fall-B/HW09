@@ -1,111 +1,118 @@
-let handPose;
-let video;
-let hands = [];
-let handColors = [];  // Array to store colors for each detected hand
-let handBlendModes = [];  // Array to store the blend mode for each hand
-let handShapes = [];  // Array to store the shape type for each hand
+let handPose; // stores handPose model
+let video; // stores webcam video
+let hands = []; // stores array of detected hands (including keypoints)
+let handColors = [];  // stores colors for each detected hand
+let handBlendModes = [];  // stores blend modes for each hand
+let handShapes = [];  // stores shapes for each hand
 
 function preload() {
-  // Load the handPose model
+  // loading handPose model
   handPose = ml5.handPose();
 }
 
 function setup() {
-  createCanvas(640, 480);
-  // Create the webcam video and hide it
+  createCanvas(640, 480); // common resolution for webcams
   video = createCapture(VIDEO);
-  video.size(640, 480);
-  video.hide();
-  // Start detecting hands from the webcam video
-  handPose.detectStart(video, gotHands);
+  video.size(640, 480); // resize video
+  video.hide(); // hide from display
+  handPose.detectStart(video, gotHands); // start detecting hands from webcam video
 }
 
 function draw() {
-  // Draw the webcam video first
-  translate(width, 0)
-  scale(-1, 1)
+  // draw webcam video
+  translate(width, 0);
+  scale(-1, 1); // flip video
   image(video, 0, 0, width, height);
 
   filter(POSTERIZE, 4);
 
-  // If there are hands detected
+  // if hands are detected
   if (hands.length > 0) {
-    // Loop through each hand
+    // loop through each hand's array -> fetch 'i'th detected hand -> store it in hand variable
     for (let i = 0; i < hands.length; i++) {
       let hand = hands[i];
 
-      // If the color for this hand has not been set, assign a random color
+      // RANDOMIZE COLOR
+      // if detected hand's color = not set, give it a random color
       if (handColors[i] === undefined || handColors[i] === null) {
-        handColors[i] = color(random(255), random(255), random(255));  // Generate a random color
+        handColors[i] = color(random(255), random(255), random(255));
       }
-      
 
-      // If the blend mode for this hand has not been set, assign a random blend mode
+
+      // RANDOMIZE BLEND MODE
+      // if detected hand's blend mode = not set, give it random blend mode
       if (handBlendModes[i] === undefined) {
         let blendModes = [DIFFERENCE, BURN, ADD];
-        handBlendModes[i] = random(blendModes);  // Assign a random blend mode
+        handBlendModes[i] = random(blendModes);
       }
-
-      // Apply the blend mode for this hand
+      // apply blend mode to hand
       blendMode(handBlendModes[i]);
 
-      // If the shape for this hand has not been set, randomly choose between square and circle
+
+      //RANDOMIZE SHAPE
+      // if detected hand's shape = not set, give it either square/circle
       if (handShapes[i] === undefined) {
-        handShapes[i] = random(["circle", "square"]);  // Randomly choose shape
+        handShapes[i] = random(["circle", "square"]);
       }
 
-      // Find the index finger tip and thumb tip for this hand
+
+      //DETECTING KEYPOINTS
+      // finding index finger tip and thumb tip keypoints for detected hand
       let finger = hand.index_finger_tip;
       let thumb = hand.thumb_tip;
 
-      // Calculate the midpoint between the thumb and index
+      // calculating midpoint between the thumb and index
       let centerX = (finger.x + thumb.x) / 2;
       let centerY = (finger.y + thumb.y) / 2;
 
-      // Calculate the pinch "distance" between finger and thumb
+      // calculating pinch gesture gap distance between finger and thumb
       let pinch = dist(finger.x, finger.y, thumb.x, thumb.y);
 
+      // if pinch gesture gap is less than 40, do not draw any shape
       if (pinch < 40) {
-        continue;  // Skip to the next hand (this hand won't draw any shape)
+        continue;
       }
 
-      // Set the color for the current hand
+      //DRAWING OUT THE RESULTING SHAPES/COLORS ON DETECTED HANDS
+      // color
       fill(handColors[i]);
       noStroke();
 
-      // Draw the shape based on the chosen type (circle or square)
+      // shape
       if (handShapes[i] === "circle") {
-        circle(centerX, centerY, pinch);  // Draw circle
-      } else if (handShapes[i] === "square") {
-        rect(centerX - pinch / 2, centerY - pinch / 2, pinch, pinch);  // Draw square
+        circle(centerX, centerY, pinch);
+      }
+      else if (handShapes[i] === "square") {
+        rect(centerX - pinch / 2, centerY - pinch / 2, pinch, pinch);
       }
     }
   }
 
-  // Reset blend mode to normal after drawing shapes
+  // reset blend mode back to normal after drawing shapes/colors
   blendMode(BLEND);
+
 }
 
-// Callback function for when handPose outputs data
+// gotHands is a callback function
+// - is called when handPose.detectStart() detects hands
+// - hands detected -> output results passed to gotHands() -> saved to hands variable 
 function gotHands(results) {
   hands = results;
 
-  // Add or remove entries based on the difference in array lengths
-  let numHands = hands.length;  // Using `let` instead of `const`
+  // track number of detected hands -> stored in numHands variable
+  let numHands = hands.length;
 
-  // Add entries for new hands
+  // when new hands are detected -> apply new set of shapes/color/blend mode
   for (let i = handColors.length; i < numHands; i++) {
-    handColors.push(null);  // Add a null color entry for new hands
-    handBlendModes.push(undefined);  // Add an undefined blend mode entry for new hands
-    handShapes.push(undefined);  // Add an undefined shape entry for new hands
+    handColors.push(undefined);
+    handBlendModes.push(undefined);
+    handShapes.push(undefined);
   }
 
-  // Remove entries for lost hands
+  // when detected hands disappear -> remove their assigned shapes/color/blend modes as well
   for (let i = numHands; i < handColors.length; i++) {
-    handColors.pop();  // Remove color entries for lost hands
-    handBlendModes.pop();  // Remove blend mode entries for lost hands
-    handShapes.pop();  // Remove shape entries for lost hands
+    handColors.pop();
+    handBlendModes.pop();
+    handShapes.pop();
   }
 }
-
-

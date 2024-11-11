@@ -32,7 +32,7 @@ function setup() {
   mImg.resize(0, height);
 
   // creating color picker
-  colorPicker = createColorPicker('#003f7c'); // starting color: Mondrian blue
+  colorPicker = createColorPicker('#003f7c'); // starting color: Mondrian Blue
   colorPicker.position(200, 212);
 
   // resizing each Gif in array
@@ -104,21 +104,21 @@ function draw() {
     let pixelIsYellow = redVal > 1 * greenVal && redVal > 2 * blueVal && redVal > 200;
 
     // MODIFYING PIXEL COLORS OF mImg BASED ON ABOVE THRESHOLDS
-    // Mondrian red areas will be modified by silder values 0-255
+    // Mondrian Red areas will be modified by RGB slider values 0-255
     if (pixelIsRed) {
       mImg.pixels[idx + 0] = rAmount;
       mImg.pixels[idx + 1] = gAmount;
       mImg.pixels[idx + 2] = bAmount;
       mImg.pixels[idx + 3] = alphaVal;
     }
-    // Mondrian blue areas will be modified by color picker
+    // Mondrian Blue areas will be modified by color picker
     else if (pixelIsBlue) {
       mImg.pixels[idx + 0] = pickedR;
       mImg.pixels[idx + 1] = pickedG;
       mImg.pixels[idx + 2] = pickedB;
       mImg.pixels[idx + 3] = alphaVal;
     }
-    // Mondrian yellow areas will be transparent
+    // Mondrian Yellow areas will be transparent
     else if (pixelIsYellow) {
       mImg.pixels[idx + 0] = 0;
       mImg.pixels[idx + 1] = 0;
@@ -145,16 +145,19 @@ function draw() {
   image(mGif[GifFrame], 0, 500);
   image(mGif[GifFrame], 325, 0); 
   pop();
-  
+
   image(mImg, 0, 0);
 
-  // displaying slider values
+  // displaying sliders/color picker labels
   fill(255);
   textSize(14);
+
   text("Red Amount: " + rAmount, 260, 148);
   text("Green Amount: " + gAmount, 260, 168);
   text("Blue Amount: " + bAmount, 260, 188);
+
   text("Color Picker", 260, 220);
   text(pickedColor, 260, 237);
+
   text("Animation Frame: " + GifFrame, 260, 278);
 }
