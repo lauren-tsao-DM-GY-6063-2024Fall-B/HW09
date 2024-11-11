@@ -10,7 +10,7 @@
 
 #### HW09B
 - Make a pinching gesture between the thumb and index finger for either or both your hands.
-- Open up your fingers, a square or circle of a randomized color and blend mode will form.
+- Open up your fingers, a square or circle of a randomized color and blend mode will form. The shapes scale depending on how large the gap is between your thumb and index finger, as well as distance from the camera.
 - To generate new shapes, move your hands completely out of the frame and back in, and repeat the pinching gesture again.
 - Demo can be found [here](https://drive.google.com/file/d/1g1bWzyEPrzzbnQOxlNhNeb0TrSW2aINS/view?usp=sharing).
 - Have fun!
