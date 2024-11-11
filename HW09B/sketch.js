@@ -22,6 +22,8 @@ function setup() {
 
 function draw() {
   // Draw the webcam video first
+  translate(width, 0)
+  scale(-1, 1)
   image(video, 0, 0, width, height);
 
   filter(POSTERIZE, 4);
