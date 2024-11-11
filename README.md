@@ -4,7 +4,7 @@
 - Please click [here](https://lauren-tsao-dm-gy-6063-2024fall-b.github.io/HW09/)
 
 #### HW09A
-- The Mondrian Red: color can be modified by moving the Red, Green and Blue Amount sliders
+- Mondrian Red: color can be modified by moving the Red, Green and Blue Amount sliders
 - Mondrian Yellow: The animation plays when the Animation Frame slider is moved
 - Mondrian Blue: colors can be changed by using the Color Picker
 
