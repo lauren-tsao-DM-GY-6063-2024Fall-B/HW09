@@ -24,6 +24,8 @@ function draw() {
   // Draw the webcam video first
   image(video, 0, 0, width, height);
 
+  filter(POSTERIZE, 4);
+
   // If there are hands detected
   if (hands.length > 0) {
     // Loop through each hand
